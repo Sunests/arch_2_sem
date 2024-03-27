@@ -1,0 +1,6 @@
+/.idea
+data
+**/.vscode
+**/src.code-workspace
+**/.venv
+**/__pycache__
