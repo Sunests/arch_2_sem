@@ -1,5 +1,14 @@
 version: '3.7'
 services:
+
+  init:
+    container_name: init
+    build:
+      context: ./init_files
+      dockerfile: Dockerfile
+    networks:
+      - arch-network
+
   arch:
     tty: true
     container_name: arch

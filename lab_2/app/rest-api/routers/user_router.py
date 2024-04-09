@@ -15,6 +15,7 @@ async def search_by_name(first_name: str, last_name: str, cursor: psycopg2.exten
         f"WHERE first_name LIKE '{
             first_name}%' AND second_name LIKE '{last_name}%'"
     cursor.execute(sql_query)
+    cursor.close()
     return cursor.fetchall()
 
 
@@ -24,6 +25,7 @@ async def search_by_username(username, cursor: psycopg2.extensions.cursor = Depe
                     FROM users
                     WHERE user_name LIKE '{username}%'"""
     cursor.execute(sql_query)
+    cursor.close()
     return cursor.fetchone()
 
 
@@ -33,6 +35,7 @@ async def get_user_details(id: int, cursor: psycopg2.extensions.cursor = Depends
         f"WHERE user_id = {id}"
     cursor.execute(sql_query)
     result = cursor.fetchall()
+    cursor.close()
     return result
 
 
@@ -49,7 +52,9 @@ async def create_user(new_user: UserModel, cursor: psycopg2.extensions.cursor = 
     except Exception as e:
         print(e)
         cursor.connection.rollback()
+        cursor.close()
         return {"error": "Failed to create user"}, 500
+    cursor.close()
     return {}, 200
 
 
@@ -70,6 +75,7 @@ async def update_user(user_id: int, updated_user: UserModel, cursor: psycopg2.ex
     except Exception as e:
         print(e)
         cursor.connection.rollback()
+        cursor.close()
         return {"error": "Failed to update user"}, 500
     return {}, 200
 
@@ -84,4 +90,5 @@ async def remove_user(user_id: int, cursor: psycopg2.extensions.cursor = Depends
         print(e)
         cursor.connection.rollback()
         return {"error": "Failed to remove user"}, 500
+    cursor.close()
     return {}, 200
