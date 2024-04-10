@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /api/articles:
+    get:
+      tags:
+      - Articles
+      summary: Get All Articles
+      operationId: get_all_articles_api_articles_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - Articles
+      summary: Create Article
+      operationId: create_article_api_articles_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/articles/{article_id}:
+    get:
+      tags:
+      - Articles
+      summary: Read Article
+      operationId: read_article_api_articles__article_id__get
+      parameters:
+      - name: article_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Article Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Articles
+      summary: Update Article
+      operationId: update_article_api_articles__article_id__put
+      parameters:
+      - name: article_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Article Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Articles
+      summary: Delete Article
+      operationId: delete_article_api_articles__article_id__delete
+      parameters:
+      - name: article_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Article Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    Article:
+      properties:
+        title:
+          type: string
+          title: Title
+        text:
+          type: string
+          title: Text
+        UDK:
+          type: string
+          title: Udk
+        date_of_load:
+          type: string
+          format: date-time
+          title: Date Of Load
+        presentation_date:
+          type: string
+          format: date-time
+          title: Presentation Date
+      type: object
+      required:
+      - title
+      - text
+      - UDK
+      - date_of_load
+      - presentation_date
+      title: Article
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

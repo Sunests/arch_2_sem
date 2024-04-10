@@ -1,0 +1,184 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /api/conferences/:
+    get:
+      tags:
+      - Conferences
+      summary: Get All Conferences
+      operationId: get_all_conferences_api_conferences__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                type: array
+                title: Response Get All Conferences Api Conferences  Get
+    post:
+      tags:
+      - Conferences
+      summary: Create Conference
+      operationId: create_conference_api_conferences__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              title: Conference Data
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Create Conference Api Conferences  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conferences/{conference_id}:
+    get:
+      tags:
+      - Conferences
+      summary: Get Conference
+      operationId: get_conference_api_conferences__conference_id__get
+      parameters:
+      - name: conference_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Conference Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceModel'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - Conferences
+      summary: Update Conference
+      operationId: update_conference_api_conferences__conference_id__put
+      parameters:
+      - name: conference_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Conference Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: Conference Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceModel'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Conferences
+      summary: Delete Conference
+      operationId: delete_conference_api_conferences__conference_id__delete
+      parameters:
+      - name: conference_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Conference Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Delete Conference Api Conferences  Conference Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ConferenceModel:
+      properties:
+        name:
+          type: string
+          title: Name
+        articles:
+          items:
+            type: string
+          type: array
+          title: Articles
+          default: []
+        date_of_conference:
+          items:
+            type: string
+          type: array
+          title: Date Of Conference
+      type: object
+      required:
+      - name
+      - date_of_conference
+      title: ConferenceModel
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
