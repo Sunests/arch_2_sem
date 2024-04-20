@@ -1,0 +1,102 @@
+version: '3.1'
+services:
+
+  # init:
+  #   container_name: init
+  #   build:
+  #     context: ./init
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - arch-network
+  #   depends_on:
+  #     mongo:
+  #       condition: service_healthy
+  #     postgres:
+  #       condition: service_healthy
+
+  arch:
+    tty: true
+    container_name: arch
+    build:
+      context: ./user_service
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - arch-network
+    depends_on:
+      mongo:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  conferences:
+    container_name: conferences
+    build:
+      context: ./conferences_api/
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8080
+    networks:
+      - arch-network
+    depends_on:
+      mongo:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  articles:
+    container_name: articles
+    build:
+      context: ./articles_api/
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8080
+    networks:
+      - arch-network
+    depends_on:
+      mongo:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=sunestss
+      - POSTGRES_PASSWORD=sunestss
+      - PGDATA=/data/postgres
+      - POSTGRES_DB=arch_db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - arch-network
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    networks:
+      - arch-network
+
+networks:
+  arch-network:
+    driver: "bridge"
+    external: false

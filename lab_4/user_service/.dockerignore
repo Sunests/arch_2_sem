@@ -1,0 +1,11 @@
+# Игнорирование файлов Dockerfile и .dockerignore
+Dockerfile
+.dockerignore
+
+# Игнорирование файлов и директорий Python
+*.pyc
+**/__pycache__
+
+# Игнорирование файлов и директорий для виртуальных окружений Python
+**venv
+**env
